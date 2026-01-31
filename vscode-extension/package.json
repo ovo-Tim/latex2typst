@@ -1,0 +1,139 @@
+{
+  "name": "latex2typst-converter",
+  "displayName": "LaTeX to Typst Converter",
+  "description": "Convert Markdown with embedded LaTeX math and pure LaTeX documents to Typst syntax",
+  "version": "0.1.0",
+  "publisher": "ovo-Tim",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ovo-Tim/latex2typst"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "latex",
+    "typst",
+    "markdown",
+    "converter",
+    "math"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onLanguage:latex",
+    "onCommand:latex2typst.convertSelection",
+    "onCommand:latex2typst.convertFile",
+    "onCommand:latex2typst.convertAndSave"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "latex2typst.convertSelection",
+        "title": "LaTeX to Typst: Convert Selection",
+        "category": "LaTeX to Typst"
+      },
+      {
+        "command": "latex2typst.convertFile",
+        "title": "LaTeX to Typst: Convert Current File",
+        "category": "LaTeX to Typst"
+      },
+      {
+        "command": "latex2typst.convertAndSave",
+        "title": "LaTeX to Typst: Convert and Save as Typst",
+        "category": "LaTeX to Typst"
+      },
+      {
+        "command": "latex2typst.showPreview",
+        "title": "LaTeX to Typst: Show Preview",
+        "category": "LaTeX to Typst",
+        "icon": "$(preview)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "latex2typst.convertSelection",
+          "when": "editorHasSelection",
+          "group": "1_modification"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "latex2typst.showPreview",
+          "when": "resourceLangId == markdown || resourceLangId == latex",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "latex2typst.convertSelection",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "latex2typst.convertFile",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "latex2typst.convertAndSave",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "latex2typst.showPreview",
+          "when": "resourceLangId == markdown || resourceLangId == latex"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "LaTeX to Typst Converter",
+      "properties": {
+        "latex2typst.autoDetectFormat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect input format (LaTeX or Markdown)"
+        },
+        "latex2typst.strictMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Error on unsupported LaTeX commands"
+        },
+        "latex2typst.preserveComments": {
+          "type": "boolean",
+          "default": false,
+          "description": "Preserve LaTeX comments in output"
+        },
+        "latex2typst.autoSaveOnConvert": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically save the Typst file after conversion"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node test-conversion.js",
+    "pretest": "pnpm run compile",
+    "lint": "eslint src --ext ts",
+    "build:wasm": "bash scripts/build-wasm.sh",
+    "build:wasm:win": "powershell -ExecutionPolicy Bypass -File scripts/build-wasm.ps1",
+    "package": "vsce package",
+    "setup": "pnpm run build:wasm && pnpm install && pnpm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {}
+}
