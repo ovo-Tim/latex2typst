@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>latex2typst WASM Demo</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 400px;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .output {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 400px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        h1 {
+            color: #333;
+        }
+        .error {
+            color: red;
+            background: #fee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>latex2typst WASM Demo</h1>
+    <p>Convert Markdown or LaTeX to Typst in your browser!</p>
+
+    <div class="controls">
+        <button onclick="convert()">Convert</button>
+        <select id="format">
+            <option value="auto">Auto-detect</option>
+            <option value="markdown">Markdown</option>
+            <option value="latex">LaTeX</option>
+        </select>
+        <button onclick="loadExample('markdown')">Load Markdown Example</button>
+        <button onclick="loadExample('latex')">Load LaTeX Example</button>
+    </div>
+
+    <div class="container">
+        <div>
+            <h3>Input</h3>
+            <textarea id="input" placeholder="Enter Markdown or LaTeX here..."></textarea>
+        </div>
+        <div>
+            <h3>Output (Typst)</h3>
+            <div id="output" class="output"></div>
+        </div>
+    </div>
+
+    <div id="error"></div>
+
+    <script type="module">
+        import init, { convert_to_typst, detect_format, version, WasmConverter } from '../pkg/latex2typst.js';
+
+        // Initialize the WASM module
+        await init();
+
+        console.log(`latex2typst version: ${version()}`);
+
+        // Make functions available globally
+        window.convert = function() {
+            const input = document.getElementById('input').value;
+            const format = document.getElementById('format').value;
+            const output = document.getElementById('output');
+            const error = document.getElementById('error');
+
+            error.innerHTML = '';
+
+            try {
+                let result;
+                if (format === 'auto') {
+                    result = convert_to_typst(input);
+                } else {
+                    const converter = new WasmConverter();
+                    result = converter.convert(input, format);
+                }
+                output.textContent = result;
+            } catch (e) {
+                error.innerHTML = `<div class="error">Error: ${e}</div>`;
+                console.error(e);
+            }
+        };
+
+        window.loadExample = function(type) {
+            const input = document.getElementById('input');
+
+            if (type === 'markdown') {
+                input.value = `# Mathematical Document
+
+## Inline Math
+
+The Pythagorean theorem: $a^2 + b^2 = c^2$
+
+Einstein's equation: $E = mc^2$
+
+## Display Math
+
+Quadratic formula:
+
+$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$
+
+## Lists
+
+- First item
+- Second item with **bold** text
+- Third item with _italic_ text
+
+## Code
+
+\`\`\`rust
+fn main() {
+    println!("Hello, Typst!");
+}
+\`\`\`
+`;
+            } else {
+                input.value = `\\documentclass{article}
+\\title{Sample Document}
+\\author{John Doe}
+
+\\begin{document}
+
+\\section{Introduction}
+
+This is a LaTeX document with \\textbf{bold} and \\emph{italic} text.
+
+\\subsection{Math}
+
+Here's the Pythagorean theorem: $a^2 + b^2 = c^2$
+
+\\subsection{Lists}
+
+\\begin{itemize}
+\\item First item
+\\item Second item
+\\item Third item
+\\end{itemize}
+
+\\section{Conclusion}
+
+That's all!
+
+\\end{document}
+`;
+            }
+        };
+
+        // Load markdown example by default
+        loadExample('markdown');
+    </script>
+</body>
+</html>

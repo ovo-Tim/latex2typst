@@ -1,0 +1,51 @@
+[package]
+name = "latex2typst"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.71"
+authors = ["Tim"]
+license = "Apache-2.0"
+description = "Convert Markdown with embedded LaTeX math and pure LaTeX documents to Typst syntax"
+repository = "https://github.com/yourusername/latex2typst"
+keywords = ["markdown", "latex", "typst", "converter", "wasm"]
+categories = ["text-processing", "parser-implementations", "wasm"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]  # Dual target for WASM + native
+
+[dependencies]
+# Markdown parsing
+pulldown-cmark = "0.11"          # CommonMark parser (WASM-compatible)
+
+# LaTeX parsing (nom combinators)
+nom = "7.1"                       # Parser combinator framework
+nom_locate = "4.2"                # Source position tracking
+
+# Error handling
+thiserror = "2.0"                 # Error handling
+
+# WASM support (optional)
+wasm-bindgen = { version = "0.2", optional = true }
+serde = { version = "1.0", features = ["derive"], optional = true }
+serde-wasm-bindgen = { version = "0.6", optional = true }
+
+[dev-dependencies]
+insta = "1.40"                    # Snapshot testing
+criterion = "0.5"                 # Benchmarking
+pretty_assertions = "1.4"         # Better test assertions
+
+[features]
+default = []
+wasm = ["wasm-bindgen", "serde", "serde-wasm-bindgen"]
+
+[profile.release]
+opt-level = "z"                   # Optimize for size (important for WASM)
+lto = true                        # Link-time optimization
+codegen-units = 1                 # Better optimization
+
+[profile.dev.package."*"]
+opt-level = 2                     # Optimize dependencies in dev mode
+
+[[bench]]
+name = "conversion"
+harness = false                   # Use criterion harness
