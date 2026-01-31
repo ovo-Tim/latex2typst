@@ -61,7 +61,7 @@ jobs:
         run: cargo install wasm-pack
 
       - name: Build WASM
-        run: wasm-pack build --features wasm --target web
+        run: wasm-pack build --target web --features wasm
 
       - name: Check bundle size
         run: |
@@ -127,7 +127,7 @@ jobs:
         run: cargo install wasm-pack
 
       - name: Build WASM
-        run: wasm-pack build --features wasm --target web
+        run: wasm-pack build --target web --features wasm
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
