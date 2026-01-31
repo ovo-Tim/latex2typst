@@ -158,10 +158,9 @@ fn parse_latex_command(input: &str) -> IResult<&str, MathExpr> {
 
     match cmd_name {
         // Greek letters - convert to Typst symbols
-        "alpha" | "beta" | "gamma" | "delta" | "epsilon" | "zeta" | "eta"
-        | "theta" | "iota" | "kappa" | "lambda" | "mu" | "nu" | "xi" | "pi"
-        | "rho" | "sigma" | "tau" | "upsilon" | "phi"
-        | "chi" | "psi" | "omega" | "Gamma" | "Delta" | "Theta" | "Lambda" | "Xi"
+        "alpha" | "beta" | "gamma" | "delta" | "epsilon" | "zeta" | "eta" | "theta" | "iota"
+        | "kappa" | "lambda" | "mu" | "nu" | "xi" | "pi" | "rho" | "sigma" | "tau" | "upsilon"
+        | "phi" | "chi" | "psi" | "omega" | "Gamma" | "Delta" | "Theta" | "Lambda" | "Xi"
         | "Pi" | "Sigma" | "Upsilon" | "Phi" | "Psi" | "Omega" => {
             Ok((input, MathExpr::Symbol(cmd_name.to_string())))
         }
@@ -287,9 +286,8 @@ fn parse_latex_command(input: &str) -> IResult<&str, MathExpr> {
         "oint" => Ok((input, MathExpr::Symbol("integral.cont".to_string()))),
 
         // Big operators: \sum, \prod, \lim, etc.
-        "sum" | "prod" | "lim" | "limsup" | "liminf"
-        | "bigcup" | "bigcap" | "bigoplus" | "bigotimes" | "bigwedge" | "bigvee" | "max"
-        | "min" | "sup" | "inf" | "arg" => {
+        "sum" | "prod" | "lim" | "limsup" | "liminf" | "bigcup" | "bigcap" | "bigoplus"
+        | "bigotimes" | "bigwedge" | "bigvee" | "max" | "min" | "sup" | "inf" | "arg" => {
             // For operators, limits can be complex expressions in braces
             let (input, _) = multispace0(input)?;
             let (input, lower) = opt(preceded(char('_'), parse_script_arg))(input)?;
@@ -332,9 +330,25 @@ fn parse_latex_command(input: &str) -> IResult<&str, MathExpr> {
                     "Z" => "ZZ",
                     "Q" => "QQ",
                     "C" => "CC",
-                    _ => return Ok((input, MathExpr::Command { name: "bb".to_string(), args: vec![arg] })),
+                    _ => {
+                        return Ok((
+                            input,
+                            MathExpr::Command {
+                                name: "bb".to_string(),
+                                args: vec![arg],
+                            },
+                        ))
+                    }
                 },
-                _ => return Ok((input, MathExpr::Command { name: "bb".to_string(), args: vec![arg] })),
+                _ => {
+                    return Ok((
+                        input,
+                        MathExpr::Command {
+                            name: "bb".to_string(),
+                            args: vec![arg],
+                        },
+                    ))
+                }
             };
             Ok((input, MathExpr::Symbol(symbol.to_string())))
         }
@@ -645,10 +659,7 @@ fn parse_matrix_content(input: &str) -> Vec<Vec<MathExpr>> {
                 let op = cell_str.chars().next().unwrap();
                 let rest = cell_str[1..].trim();
                 if let Ok(right_expr) = parse(rest) {
-                    MathExpr::Group(vec![
-                        MathExpr::Symbol(op.to_string()),
-                        right_expr,
-                    ])
+                    MathExpr::Group(vec![MathExpr::Symbol(op.to_string()), right_expr])
                 } else {
                     MathExpr::Symbol(cell_str.to_string())
                 }
