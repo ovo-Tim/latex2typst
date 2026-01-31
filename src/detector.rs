@@ -73,7 +73,7 @@ fn count_markdown_syntax(text: &str) -> usize {
             && trimmed
                 .chars()
                 .nth(1)
-                .map_or(false, |c| c == ' ' || c == '#')
+                .is_some_and(|c| c == ' ' || c == '#')
         {
             count += 1;
         }

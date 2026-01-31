@@ -71,20 +71,12 @@ pub enum InputFormat {
 
 /// Configuration for the converter
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct Config {
     /// Error on unsupported LaTeX commands (default: false)
     pub strict_mode: bool,
     /// Preserve LaTeX comments in output (default: false)
     pub preserve_comments: bool,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            strict_mode: false,
-            preserve_comments: false,
-        }
-    }
 }
 
 /// Advanced converter with configuration

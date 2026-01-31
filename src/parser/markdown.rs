@@ -243,23 +243,13 @@ impl MarkdownConverter {
                 self.finalize_current_block();
             }
             TagEnd::Strong | TagEnd::Emphasis | TagEnd::Strikethrough => {
-                if let Some(builder) = self.inline_stack.pop() {
-                    match builder {
-                        InlineBuilder::Formatted { style, content } => {
-                            self.add_inline(Inline::Formatted { style, content });
-                        }
-                        _ => {}
-                    }
+                if let Some(InlineBuilder::Formatted { style, content }) = self.inline_stack.pop() {
+                    self.add_inline(Inline::Formatted { style, content });
                 }
             }
             TagEnd::Link => {
-                if let Some(builder) = self.inline_stack.pop() {
-                    match builder {
-                        InlineBuilder::Link { url, text } => {
-                            self.add_inline(Inline::Link { text, url });
-                        }
-                        _ => {}
-                    }
+                if let Some(InlineBuilder::Link { url, text }) = self.inline_stack.pop() {
+                    self.add_inline(Inline::Link { text, url });
                 }
             }
             _ => {}

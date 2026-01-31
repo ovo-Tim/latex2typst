@@ -63,14 +63,14 @@ impl MathRenderer {
                         // Dot accent
                         if let Some(arg) = args.first() {
                             self.render_expr(arg)?;
-                            self.output.push_str("̇"); // Unicode combining dot above
+                            self.output.push('̇'); // Unicode combining dot above
                         }
                     }
                     "diaer" => {
                         // Double dot (diaeresis)
                         if let Some(arg) = args.first() {
                             self.render_expr(arg)?;
-                            self.output.push_str("̈"); // Unicode combining diaeresis
+                            self.output.push('̈'); // Unicode combining diaeresis
                         }
                     }
                     "tilde" => {
@@ -288,7 +288,7 @@ impl MathRenderer {
                                 self.output.push_str(" \"if\" ");
                                 for (j, cell) in row.iter().skip(1).enumerate() {
                                     if j > 0 {
-                                        self.output.push_str(" ");
+                                        self.output.push(' ');
                                     }
                                     self.render_expr(cell)?;
                                 }
