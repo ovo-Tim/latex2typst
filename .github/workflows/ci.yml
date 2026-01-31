@@ -54,6 +54,9 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
 
+      - name: Verify wasm target
+        run: rustup target add wasm32-unknown-unknown
+
       - name: Install wasm-pack
         run: cargo install wasm-pack
 
@@ -116,6 +119,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
+
+      - name: Verify wasm target
+        run: rustup target add wasm32-unknown-unknown
 
       - name: Install wasm-pack
         run: cargo install wasm-pack
