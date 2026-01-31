@@ -8,7 +8,6 @@ A Rust library for converting Markdown with embedded LaTeX math and pure LaTeX d
 - ✅ Parse pure LaTeX documents
 - ✅ Convert to Typst syntax
 - ✅ WASM support for browser/Node.js usage
-- 🚧 Under active development
 
 ## Installation
 
@@ -91,40 +90,6 @@ const { convert_to_typst } = require('./pkg/latex2typst.js');
 const typst = convert_to_typst("# Hello\n\n$x^2$", "markdown");
 console.log(typst);
 ```
-
-## Development Status
-
-This library is under active development. Current progress:
-
-- ✅ **Phase 1: Foundation** - Project structure and core types
-- 🚧 **Phase 2: Markdown Parser** - Markdown → AST conversion
-- ⏳ **Phase 3: LaTeX Math Parser** - LaTeX math → Math AST
-- ⏳ **Phase 4: Math Conversion** - Math AST → Typst math
-- ⏳ **Phase 5: Full LaTeX Parser** - Pure LaTeX documents
-- ⏳ **Phase 6: API & WASM** - Public API and WASM bindings
-- ⏳ **Phase 7: Documentation & Release** - v0.1.0 release
-
-## Supported LaTeX Commands
-
-### Current Support
-
-- 🚧 Coming soon!
-
-### Planned Support
-
-**Phase 1 (Core):**
-- Document structure: `\documentclass`, `\section`, `\subsection`
-- Text: `\textbf`, `\emph`, `\textit`, `\texttt`
-- Lists: `itemize`, `enumerate`
-- Math: Greek letters, fractions, sqrt, sub/superscripts
-
-**Phase 2 (Common):**
-- Math environments: `equation`, `align`, `cases`
-- Verbatim: `verbatim`, `lstlisting`
-
-**Phase 3 (Advanced):**
-- Figures, tables, references
-
 ## Building
 
 ```bash
