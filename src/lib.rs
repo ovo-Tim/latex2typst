@@ -70,8 +70,7 @@ pub enum InputFormat {
 }
 
 /// Configuration for the converter
-#[derive(Debug, Clone)]
-#[derive(Default)]
+#[derive(Debug, Clone, Default)]
 pub struct Config {
     /// Error on unsupported LaTeX commands (default: false)
     pub strict_mode: bool,

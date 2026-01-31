@@ -69,11 +69,7 @@ fn count_markdown_syntax(text: &str) -> usize {
     // Count Markdown headings (# at start of line)
     for line in text.lines() {
         let trimmed = line.trim_start();
-        if trimmed.starts_with('#')
-            && trimmed
-                .chars()
-                .nth(1)
-                .is_some_and(|c| c == ' ' || c == '#')
+        if trimmed.starts_with('#') && trimmed.chars().nth(1).is_some_and(|c| c == ' ' || c == '#')
         {
             count += 1;
         }
